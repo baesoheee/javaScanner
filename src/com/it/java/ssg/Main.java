@@ -1,43 +1,89 @@
-package com.it.java.ssg;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) {
 		System.out.println("== program start ==");
 		Scanner sc = new Scanner(System.in);
-		int lastID = 0;
-		
-		while(true) {
-			System.out.printf("Enter the command : ");
+		int lastArticleId = 0;
+		List<Article> articles = new ArrayList<>();
+		while (true) {
+			System.out.printf("Enter the command) ");
 			String command = sc.nextLine();
-			command = command.trim();    //공백 처리
-			if (command.length()==0) {
+			command = command.trim();
+			if (command.length() == 0) {
 				continue;
-			}							 // 띄어쓰기만 했을 때 위로 다시 올라가기
-			
-			if(command.equals("exit")) {
+			}
+			if (command.equals("system exit")) {
 				break;
-			}else if(command.equals("article write")) {
-				int id = lastID + 1;
-				lastID = id;   // ID 갱신
+			}
+			if (command.equals("article write")) {
+				int id = lastArticleId + 1;
+				lastArticleId = id;
 				System.out.printf("title : ");
 				String title = sc.nextLine();
 				System.out.printf("contents : ");
 				String body = sc.nextLine();
-				
-				System.out.printf("%d post has been created.\n",id);
-				System.out.printf("title : %s\n",title);
-				System.out.printf("body : %s\n",body);
-				
-			}else if(command.equals("article list")) {
-				System.out.println("There are no posts.");
-			}else {
+				Article article = new Article(id, title, body);
+				articles.add(article);
+				System.out.printf("No.%d post created.\n", id);
+			} else if (command.equals("article list")) {
+				if (articles.size() == 0) {
+					System.out.println("There are no posts.");
+					continue;
+				}
+//				1번게시물부터 2,3,4 순으로 정렬
+//				for(int i = 0; i<articles.size();i++) {
+//					Article article = articles.get(i);
+//				}
+//				최신게시물부터 출력
+				System.out.println("번호  |    제목");
+				for (int i = articles.size() - 1; i >= 0; i--) {
+					Article article = articles.get(i);
+					System.out.printf("%d    |  %s\n", article.id, article.title);
+				}
+
+			} else if (command.startsWith("article detail")) {
+				String[] commandbits = command.split(" ");
+				int id = Integer.parseInt(commandbits[2]); // "2" => 2
+
+				Article foundArticle = null;
+
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					if (article.id == id) {
+
+						foundArticle = article;
+						break;
+					}
+				}
+				if (foundArticle == null) {
+					System.out.printf("No.%d post does not exist.\n", id);
+					continue;
+				}
+				System.out.printf("numbr : %d\n", foundArticle.id);
+				System.out.printf("date : 2022-07-16 12:41:15\n");
+				System.out.printf("title : %s\n", foundArticle.title);
+				System.out.printf("contents : %s\n", foundArticle.body);
+
+			} else {
+
 				System.out.printf("%s is a non-existent command.\n", command);
-				
 			}
 		}
 		sc.close();
 		System.out.println("== program end ==");
+	}
+}
+class Article {
+	int id;
+	String title;
+	String body;
+	public Article(int id, String title, String body) {
+		this.id = id;
+		this.title = title;
+		this.body = body;
 	}
 }
