@@ -1,3 +1,4 @@
+package com.it.java.ssg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class Main {
 //					Article article = articles.get(i);
 //				}
 //				최신게시물부터 출력
-				System.out.println("번호  |    제목");
+				System.out.println("number  |   title");
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
 					System.out.printf("%d    |  %s\n", article.id, article.title);
@@ -67,6 +68,29 @@ public class Main {
 				System.out.printf("date : 2022-07-16 12:41:15\n");
 				System.out.printf("title : %s\n", foundArticle.title);
 				System.out.printf("contents : %s\n", foundArticle.body);
+
+			}else if (command.startsWith("article delete")) {
+				String[] commandbits = command.split(" ");
+				int id = Integer.parseInt(commandbits[2]); // "2" => 2
+
+				int foundIndex = -1;
+
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					if (article.id == id) {
+						foundIndex = i;
+						break;
+					}
+				}
+				if (foundIndex == -1) {
+					System.out.printf("No.%d doesn't exist.\n", id);
+					continue;
+				}
+//				size()  => 3
+//				index : 0, 1, 2
+//				id    : 1, 2, 3
+				articles.remove(foundIndex);
+				System.out.printf("No.%d has been deleted.", id);
 
 			} else {
 
